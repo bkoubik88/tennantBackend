@@ -3,6 +3,7 @@ package com.springboot.tennant;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
+import javax.mail.Address;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -58,13 +59,16 @@ public class ProcessAnswers implements ErrorController{
     	    }
     	});
     	
+    	
+  
+    	
     	Message message = new MimeMessage(session);
     	message.setFrom(new InternetAddress("benjamin.koubik@gmx.de","UNENU"));
-    	message.setRecipients(
-    	  Message.RecipientType.TO, InternetAddress.parse("benjamin.koubik@gmx.de"));
-    	message.setSubject("Mail Subject");
+    	message.addRecipients(Message.RecipientType.CC,
+                InternetAddress.parse("benjamin.koubik@gmx.de,sd.office@gmx.de"));
+    	message.setSubject("Antwort Fragebogen");
 
-    	String msg = "This is my first email using JavaMailer";
+    	String msg = "Guten Tag, Herr/Frau...dies ist ihre Wertung <NUR ZUM TEST> Wertung:(wenn nicht KO === true) " + gesamt + " KO?: " + String.valueOf(koQ1);
 
     	MimeBodyPart mimeBodyPart = new MimeBodyPart();
     	mimeBodyPart.setContent(msg, "text/html; charset=utf-8");
