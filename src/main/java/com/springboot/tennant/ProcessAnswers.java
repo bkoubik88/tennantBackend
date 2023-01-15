@@ -16,9 +16,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorController;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,10 +36,7 @@ public class ProcessAnswers implements ErrorController{
 	private final double total = 6500;
     private static final String PATH = "/error";
 
-//	@Autowired
-//    private JavaMailSender javaMailSender;
-//	
-    
+
     private void sendMail() throws AddressException, MessagingException, UnsupportedEncodingException {
     	
     	
@@ -81,13 +76,7 @@ public class ProcessAnswers implements ErrorController{
 
     	Transport.send(message);
     	
-//		SimpleMailMessage msg = new SimpleMailMessage();
-//		msg.setTo("to_1@gmail.com", "to_2@gmail.com", "to_3@yahoo.com");
-//
-//		msg.setSubject("Testing from Spring Boot");
-//		msg.setText("Hello World \n Spring Boot Email");
-//
-//		javaMailSender.send(msg);
+
     	
     }
     
