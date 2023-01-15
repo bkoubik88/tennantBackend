@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,9 +54,6 @@ public class ProcessAnswers implements ErrorController{
     	prop.put("mail.smtp.port", "587");
     	prop.put("mail.smtp.ssl.trust", "*");
     	prop.put("mail.smtp.ssl.protocols","TLSv1.2");
-
-
-  
 
     	
     	Session session = Session.getInstance(prop, new Authenticator() {
@@ -97,10 +95,14 @@ public class ProcessAnswers implements ErrorController{
         return obtained * 100 / total;
     }
     
+    @GetMapping("/")
+    public String sayHi() {
+    	return "HELLO";
+    }
+    
 	@PostMapping("/process")
 	public String sayHi(HttpServletResponse response,HttpServletRequest request) throws UnsupportedEncodingException {
 		
-	
 		
 		String email = request.getParameter("email");
 
