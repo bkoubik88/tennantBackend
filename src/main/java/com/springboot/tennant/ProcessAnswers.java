@@ -68,7 +68,7 @@ public class ProcessAnswers implements ErrorController{
                 InternetAddress.parse("benjamin.koubik@gmx.de,sd.office@gmx.de"));
     	message.setSubject("Antwort Fragebogen");
 
-    	String msg = "Guten Tag, Herr/Frau...dies ist ihre Wertung <NUR ZUM TEST> Wertung:(wenn nicht KO === true) " + gesamt + " KO?: " + String.valueOf(koQ1);
+    	String msg = "Guten Tag, Herr/Frau...dies ist ihre Wertung <NUR ZUM TEST> Wertung:(wenn nicht KO === true) " + gesamt + "% KO?: " + String.valueOf(koQ1);
 
     	MimeBodyPart mimeBodyPart = new MimeBodyPart();
     	mimeBodyPart.setContent(msg, "text/html; charset=utf-8");
