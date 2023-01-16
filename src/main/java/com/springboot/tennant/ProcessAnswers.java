@@ -111,7 +111,31 @@ public class ProcessAnswers implements ErrorController{
 		
 		
 		//ZUSATZFRAGEN
-		double einkommen = Double.parseDouble(request.getParameter("einkommen"));
+		
+	
+		String einkommenString = String.valueOf(request.getParameter("einkommen"));
+		
+		
+		double einkommen;
+		
+		if(einkommenString.contains("."))
+		{
+				String[] einkommenSplit =  einkommenString.split("\\.");
+				einkommen = Double.parseDouble(einkommenSplit[0]);
+		}
+		else if(einkommenString.contains(","))
+		{
+			String[] einkommenSplit = einkommenString.split("\\,");
+			einkommen = Double.parseDouble(einkommenSplit[0]);
+
+		}
+		else
+		{
+			einkommen = Double.parseDouble(einkommenString);
+		}
+		
+	
+		
 		
 		String question2Z = request.getParameter("question2Z");
 		String question3Z = request.getParameter("question3Z");
@@ -122,6 +146,7 @@ public class ProcessAnswers implements ErrorController{
 		String question8Z = request.getParameter("question8Z");
 		
 
+		
 		
 		double percent = calculatePercentage(einkommen, total);
 		
