@@ -50,10 +50,6 @@ public class ProcessAnswers implements ErrorController {
 		return obtained * 100 / total;
 	}
 
-	@GetMapping("/")
-	public String sayHi() {
-		return "HELLO";
-	}
 
 	@PostMapping("/mailFragebogen")
 	public void sendMailLink(HttpServletResponse response, HttpServletRequest request)
@@ -105,8 +101,9 @@ public class ProcessAnswers implements ErrorController {
 		message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(email));
 		message.setSubject("Fragebogen");
 
-		String msg = "Guten Tag, Herr/Frau...<br>";
-		msg += "Bitte klicken Sie auf folgenden Link und füllen Sie den Fragebogen verantwortungsbewusst aus.<br>";
+		String msg = "Guten Tag, Herr/Frau...,<br>";
+		msg += "Bitte klicken Sie auf folgenden Link und füllen Sie den Fragebogen verantwortungsbewusst aus.<br><br>";
+		msg += "https://stately-torte-bef106.netlify.app <br>";
 		msg += "Vielen Dank!";
 
 		MimeBodyPart mimeBodyPart = new MimeBodyPart();
