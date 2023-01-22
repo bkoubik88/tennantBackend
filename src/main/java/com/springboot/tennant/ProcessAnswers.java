@@ -2,6 +2,8 @@ package com.springboot.tennant;
 
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +25,7 @@ import javax.mail.internet.MimeMultipart;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,29 +53,58 @@ public class ProcessAnswers implements ErrorController {
 		return obtained * 100 / total;
 	}
 
-
 	@PostMapping("/mailFragebogen")
-	public void sendMailLink(HttpServletResponse response, HttpServletRequest request)
-	{
+	public void sendMailLink(HttpServletResponse response, HttpServletRequest request) {
 		String email = request.getParameter("email");
 
 		try {
-			
+
 			sendMailLink(email);
-			
-			
+
 			PrintWriter out = response.getWriter();
-			
+
 			out.print("Frageboge versandt");
-			
+
 			out.flush();
 			out.close();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
+	}
 	
+	
+	
+
+	@Scheduled(cron = "0 1 1 * * ?", zone = "Europe/Paris")
+	private void check24() throws AddressException, UnsupportedEncodingException, MessagingException {
+
+		Instant now = Instant.now();
+
+		List<Answers> allAnswers = repository.findAll();
+
+		for (Answers answers : allAnswers) {
+
+			Date then = answers.getAusgefülltAm();
+
+			Instant aus = then.toInstant();
+
+			Instant twentyFourHoursEarlier = now.minus(24, ChronoUnit.HOURS);
+
+			Boolean within24Hours = (!aus.isBefore(twentyFourHoursEarlier)) && aus.isBefore(now);
+			
+			if(!within24Hours)
+			{
+				sendMail();
+				
+				
+			}
+
+		}
+
+	
+
 	}
 
 	private Boolean sendMailLink(String email)
@@ -256,22 +288,13 @@ public class ProcessAnswers implements ErrorController {
 			gesamt += 10;
 		}
 
-		try {
-			boolean status = saveDataDB(email, question6Z, einkommen);
-			boolean status1 = sendMail();
+		boolean status = saveDataDB(email, question6Z, einkommen);
+		
 
-			if (status && status1) {
-				wert = "OK";
-			} else {
-				wert = "Fehler";
-			}
-
-		} catch (AddressException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (status) {
+			wert = "OK";
+		} else {
+			wert = "Fehler";
 		}
 
 		return wert;
@@ -298,12 +321,15 @@ public class ProcessAnswers implements ErrorController {
 		});
 
 		Message message = new MimeMessage(session);
+		message.setContent(message, "text/html");
 		message.setFrom(new InternetAddress("benjamin.koubik@gmx.de", "UNENU"));
 		message.addRecipients(Message.RecipientType.CC, InternetAddress.parse("benjamin.koubik@gmx.de"));
 		message.setSubject("Antwort Fragebogen");
 
-		String msg = "Guten Tag, Herr/Frau...dies ist ihre Wertung <NUR ZUM TEST> Wertung:(wenn nicht KO === true) "
-				+ gesamt + "% KO?: " + String.valueOf(koQ1);
+		String msg = "Guten Tag, Herr/Frau...,<br/>";
+		msg += "Vielen Dank für Ihr Vertrauen.<br/>";
+		msg +=	"Leider müssen wir Ihnen absagen, aufgrund...<br/>";
+		msg +=	"Wir bedanken uns herzlich und wünschen Ihnen auf Ihrer Suche nach einem passendne Objekt viel Erfolg!<br/>";
 
 		MimeBodyPart mimeBodyPart = new MimeBodyPart();
 		mimeBodyPart.setContent(msg, "text/html; charset=utf-8");
