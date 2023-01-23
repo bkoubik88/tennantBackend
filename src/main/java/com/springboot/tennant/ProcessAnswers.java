@@ -27,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -233,9 +232,15 @@ public class ProcessAnswers implements ErrorController {
 				|| question5.equals("nein") || question6.equals("nein") || question7.equals("nein")) {
 			koQ1 = true;
 		}
+		
+		if (question1.equals("nein - ka") || question2.equals("nein - ka") || question3.equals("nein - ka") || question4.equals("nein - ka")
+				|| question5.equals("nein - ka") || question6.equals("nein - ka") || question7.equals("nein - ka")) {
+			koQ1 = true;
+		}
 
 		// AUSWERTUNG ZUSATZFRAGEN
 
+	
 		if (question2Z.equals("nein")) {
 			gesamt += 10;
 		}
